@@ -1,0 +1,19 @@
+# choir of services to deploy
+version: "3.9"
+services: 
+  capelmeister:
+    build: .
+    ports:
+      - "80:80"
+      - "443:443"
+ 
+  jsonrpcproxy:
+    build: ../monte-carlo/jsonrpc-ws-proxy/
+    ports: 
+      - "3000:3000"
+  
+  signalserver:
+    build: ../monte-carlo/signal-server/
+    ports:
+      - "4444:4444"
+
