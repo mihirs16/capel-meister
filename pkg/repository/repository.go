@@ -2,9 +2,6 @@ package repository
 
 import (
 	"capel-meister/pkg/logs"
-	"fmt"
-	"os"
-
 	"github.com/go-git/go-git/v5"
 )
 
@@ -19,7 +16,6 @@ type RepoMetadata struct {
 };
 
 func LoadRepository (repoPath string) *RepoMetadata {
-    fmt.Println(repoPath);
     repo, err := git.PlainOpen(repoPath);
     logs.Error(err);
 
@@ -34,11 +30,7 @@ func LoadRepository (repoPath string) *RepoMetadata {
 }
 
 func (repoMetadata *RepoMetadata) PullRepository () {
-    err := repoMetadata.worktree.Checkout(&git.CheckoutOptions{
-        Branch: "refs/heads/main",
-    });
-    logs.Error(err);
-    err = repoMetadata.worktree.Pull(&git.PullOptions{
+    err := repoMetadata.worktree.Pull(&git.PullOptions{
         RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
     });
     if err == git.NoErrAlreadyUpToDate {
@@ -48,16 +40,3 @@ func (repoMetadata *RepoMetadata) PullRepository () {
     }
 }
 
-func (repoMetadata *RepoMetadata) UpdateSubmodules () { 
-    err := repoMetadata.submodules.Update(&git.SubmoduleUpdateOptions{
-        Init: true,
-        RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
-    });
-    logs.Error(err);
-
-    for i := range repoMetadata.submodules {
-        tempRepoMetadata := LoadRepository(os.Getenv("MEISTER_PATH") + repoMetadata.submodules[i].Config().Path);
-        tempRepoMetadata.PullRepository();
-    }
-
-}
