@@ -15,5 +15,5 @@ func main () {
     // repository operations
     repoMetadata := repository.LoadRepository(os.Getenv("MEISTER_PATH"));
     repoMetadata.PullRepository();
-    repoMetadata.UpdateSubmodules();
+    // repoMetadata.UpdateSubmodules();
 }
