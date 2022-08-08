@@ -2,12 +2,14 @@ package repository
 
 import (
 	"capel-meister/pkg/logs"
+	"fmt"
+
 	"github.com/go-git/go-git/v5"
-);
+)
 
 /*
-RepoMetadata has metadata 
-for the repository, worktree and submodules 
+RepoMetadata has metadata
+for the repository, worktree and submodules
 */
 type RepoMetadata struct {
     repository  *git.Repository
@@ -29,8 +31,14 @@ func LoadRepository (repoPath string) *RepoMetadata {
     return &repoMetadata;
 }
 
-func (repoMetadata *RepoMetadata) FetchRepository () {
-    err := repoMetadata.repository.Fetch(&git.FetchOptions{});
+func (repoMetadata *RepoMetadata) PullRepository () {
+    err := repoMetadata.worktree.Checkout(&git.CheckoutOptions{
+        Branch: "refs/heads/main",
+    });
+    logs.Error(err);
+    err = repoMetadata.worktree.Pull(&git.PullOptions{
+        RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
+    });
     if err == git.NoErrAlreadyUpToDate {
         logs.Info("Already up to date.");
     } else {
@@ -38,17 +46,16 @@ func (repoMetadata *RepoMetadata) FetchRepository () {
     }
 }
 
-func (repoMetadata *RepoMetadata) PullRepository () {
-    err := repoMetadata.worktree.Pull(&git.PullOptions{});
-    if err == git.NoErrAlreadyUpToDate {
-        logs.Info("Already up to date.");
-    } else {
-        logs.Error(err);
+func (repoMetadata *RepoMetadata) UpdateSubmodules () { 
+    for i := range repoMetadata.submodules {
+        fmt.Println(repoMetadata.submodules[i].Config().Path);
+        tempRepoMetadata := LoadRepository(repoMetadata.submodules[i].Config().Path);
+        tempRepoMetadata.PullRepository();
     }
-    
-    err = repoMetadata.submodules.Update(&git.SubmoduleUpdateOptions{
+
+    err := repoMetadata.submodules.Update(&git.SubmoduleUpdateOptions{
         Init: true,
-        NoFetch: false,
+        RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
     });
     logs.Error(err);
 }
