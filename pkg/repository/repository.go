@@ -3,6 +3,7 @@ package repository
 import (
 	"capel-meister/pkg/logs"
 	"fmt"
+	"os"
 
 	"github.com/go-git/go-git/v5"
 )
@@ -18,6 +19,7 @@ type RepoMetadata struct {
 };
 
 func LoadRepository (repoPath string) *RepoMetadata {
+    fmt.Println(repoPath);
     repo, err := git.PlainOpen(repoPath);
     logs.Error(err);
 
@@ -47,15 +49,15 @@ func (repoMetadata *RepoMetadata) PullRepository () {
 }
 
 func (repoMetadata *RepoMetadata) UpdateSubmodules () { 
-    for i := range repoMetadata.submodules {
-        fmt.Println(repoMetadata.submodules[i].Config().Path);
-        tempRepoMetadata := LoadRepository(repoMetadata.submodules[i].Config().Path);
-        tempRepoMetadata.PullRepository();
-    }
-
     err := repoMetadata.submodules.Update(&git.SubmoduleUpdateOptions{
         Init: true,
         RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
     });
     logs.Error(err);
+
+    for i := range repoMetadata.submodules {
+        tempRepoMetadata := LoadRepository(os.Getenv("MEISTER_PATH") + repoMetadata.submodules[i].Config().Path);
+        tempRepoMetadata.PullRepository();
+    }
+
 }
