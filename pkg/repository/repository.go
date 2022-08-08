@@ -38,14 +38,15 @@ func (repoMetadata *RepoMetadata) FetchRepository () {
 }
 
 func (repoMetadata *RepoMetadata) PullRepository () {
-    err := repoMetadata.submodules.Init();
-    logs.Error(err);
-
-    err = repoMetadata.worktree.Pull(&git.PullOptions{
-        RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
-    });
+    err := repoMetadata.worktree.Pull(&git.PullOptions{});
     if err != git.NoErrAlreadyUpToDate {
         logs.Error(err);
     }
     logs.Info("Already up to date.");
+    
+    err = repoMetadata.submodules.Update(&git.SubmoduleUpdateOptions{
+        Init: true,
+        NoFetch: false,
+    });
+    logs.Error(err);
 }
