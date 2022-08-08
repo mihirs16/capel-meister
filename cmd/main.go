@@ -1,9 +1,9 @@
 package main
 
 import (
+    "os"
 	"capel-meister/pkg/logs"
 	"capel-meister/pkg/repository"
-	"os"
 	"github.com/joho/godotenv"
 );
 
@@ -12,6 +12,8 @@ func main () {
     err := godotenv.Load();
     logs.Error(err);
     
-    // open this repository
-    repository.LoadRepository(os.Getenv("MEISTER_PATH"));
+    // repository operations
+    repoMetadata := repository.LoadRepository(os.Getenv("MEISTER_PATH"));
+    repoMetadata.FetchRepository();
+    repoMetadata.PullRepository();
 }

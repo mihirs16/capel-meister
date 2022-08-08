@@ -31,7 +31,21 @@ func LoadRepository (repoPath string) *RepoMetadata {
 
 func (repoMetadata *RepoMetadata) FetchRepository () {
     err := repoMetadata.repository.Fetch(&git.FetchOptions{});
-    logs.Error(err);
+    if err != git.NoErrAlreadyUpToDate {
+        logs.Error(err);
+    }
+    logs.Info("Already up to date.");
 }
 
-// func () PullRepository () {}
+func (repoMetadata *RepoMetadata) PullRepository () {
+    err := repoMetadata.submodules.Init();
+    logs.Error(err);
+
+    err = repoMetadata.worktree.Pull(&git.PullOptions{
+        RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
+    });
+    if err != git.NoErrAlreadyUpToDate {
+        logs.Error(err);
+    }
+    logs.Info("Already up to date.");
+}
