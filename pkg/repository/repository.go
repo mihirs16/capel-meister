@@ -12,7 +12,6 @@ for the repository, worktree and submodules
 type RepoMetadata struct {
     repository  *git.Repository
     worktree    *git.Worktree
-    submodules  git.Submodules
 };
 
 func LoadRepository (repoPath string) *RepoMetadata {
@@ -22,11 +21,7 @@ func LoadRepository (repoPath string) *RepoMetadata {
     worktree, err := repo.Worktree();
     logs.Error(err);
 
-    submodules, err := worktree.Submodules();
-    logs.Error(err);
-
-    repoMetadata := RepoMetadata{repo, worktree, submodules};
-    return &repoMetadata;
+    return &RepoMetadata{repo, worktree};
 }
 
 func (repoMetadata *RepoMetadata) PullRepository () {
