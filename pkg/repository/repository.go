@@ -14,6 +14,25 @@ type RepoMetadata struct {
     worktree    *git.Worktree
 };
 
+/* 
+CloneRepository clones the repo 
+from the `url` specified 
+to the repoPath specified
+*/
+func CloneRepository (url string, repoPath string) *RepoMetadata {
+    repo, err := git.PlainClone(repoPath, false, &git.CloneOptions{});
+    logs.Error(err);
+
+    worktree, err := repo.Worktree();
+    logs.Error(err);
+
+    return &RepoMetadata{repo, worktree};
+}
+
+/*
+LoadRepository loads the repo if `.git` dir
+if found in the `repoPath`
+*/
 func LoadRepository (repoPath string) *RepoMetadata {
     repo, err := git.PlainOpen(repoPath);
     logs.Error(err);
@@ -24,6 +43,9 @@ func LoadRepository (repoPath string) *RepoMetadata {
     return &RepoMetadata{repo, worktree};
 }
 
+/* 
+PullRepository pulls the repository represented by RepoMetadata
+*/
 func (repoMetadata *RepoMetadata) PullRepository () {
     err := repoMetadata.worktree.Pull(&git.PullOptions{
         RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
@@ -33,5 +55,18 @@ func (repoMetadata *RepoMetadata) PullRepository () {
     } else {
         logs.Error(err);
     }
+}
+
+/*
+CheckoutBranch checks out the branch for the repo
+*/
+func (repoMetadata *RepoMetadata) CheckoutBranch (branchName string) {
+    branch, err := repoMetadata.repository.Branch(branchName);
+    logs.Error(err);
+
+    err = repoMetadata.worktree.Checkout(&git.CheckoutOptions{
+        Branch: branch.Merge,
+    });
+    logs.Error(err);
 }
 
