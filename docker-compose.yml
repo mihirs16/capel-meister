@@ -1,7 +1,5 @@
 # choir of services to deploy
 version: "3.9"
-repositories:
-  - "github.com/mihirs16/monte-carlo"
 services: 
   jsonrpcproxy:
     build: ../monte-carlo/jsonrpc-ws-proxy/
