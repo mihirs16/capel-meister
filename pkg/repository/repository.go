@@ -16,10 +16,11 @@ type RepoMetadata struct {
 
 /* 
 CloneRepository clones the repo 
-from the `url` specified 
+from the `repoUrl` specified 
 to the repoPath specified
 */
-func CloneRepository (url string, repoPath string) *RepoMetadata {
+func CloneRepository (repoUrl string) *RepoMetadata {
+    repoPath := PathFromRepoURL(repoUrl);
     repo, err := git.PlainClone(repoPath, false, &git.CloneOptions{});
     logs.Error(err);
 
@@ -33,7 +34,8 @@ func CloneRepository (url string, repoPath string) *RepoMetadata {
 LoadRepository loads the repo if `.git` dir
 if found in the `repoPath`
 */
-func LoadRepository (repoPath string) *RepoMetadata {
+func LoadRepository (repoUrl string) *RepoMetadata {
+    repoPath := PathFromRepoURL(repoUrl);
     repo, err := git.PlainOpen(repoPath);
     logs.Error(err);
 
