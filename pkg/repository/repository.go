@@ -21,7 +21,10 @@ to the repoPath specified
 */
 func CloneRepository (repoUrl string) *RepoMetadata {
     repoPath := PathFromRepoURL(repoUrl);
-    repo, err := git.PlainClone(repoPath, false, &git.CloneOptions{});
+    repo, err := git.PlainClone(repoPath, false, &git.CloneOptions{ 
+        URL: repoUrl,
+        RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
+    });
     logs.Error(err);
 
     worktree, err := repo.Worktree();

@@ -1,6 +1,7 @@
 package actions
 
 import (
+	"capel-meister/pkg/container"
 	"capel-meister/pkg/repository"
 )
 
@@ -19,5 +20,7 @@ func Deploy (DeployMetadata map[string]string) {
     meisterRepo := repository.LoadRepository("https://github.com/mihirs16/capel-meister");
     meisterRepo.PullRepository();
 
-    // docker compose -f choir.yml up --build --detach --remove-orphans
+    // docker compose 
+    container.Build();
+    container.Up();
 }
