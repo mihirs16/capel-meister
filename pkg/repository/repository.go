@@ -5,6 +5,7 @@ import (
 	"github.com/go-git/go-git/v5"
 )
 
+
 /*
 RepoMetadata has metadata
 for the repository, worktree and submodules
@@ -12,17 +13,20 @@ for the repository, worktree and submodules
 type RepoMetadata struct {
     repository  *git.Repository
     worktree    *git.Worktree
+    URL         string          `json:"url"`
+    BranchName  string          `json:"branch"`
 };
+
 
 /* 
 CloneRepository clones the repo 
 from the `repoUrl` specified 
 to the repoPath specified
 */
-func CloneRepository (repoUrl string) *RepoMetadata {
-    repoPath := PathFromRepoURL(repoUrl);
+func (repoMetadata *RepoMetadata) CloneRepository () {
+    repoPath := PathFromRepoURL(repoMetadata.URL);
     repo, err := git.PlainClone(repoPath, false, &git.CloneOptions{ 
-        URL: repoUrl,
+        URL: repoMetadata.URL,
         RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
     });
     logs.Error(err);
@@ -30,23 +34,31 @@ func CloneRepository (repoUrl string) *RepoMetadata {
     worktree, err := repo.Worktree();
     logs.Error(err);
 
-    return &RepoMetadata{repo, worktree};
+    repoMetadata.repository = repo;
+    repoMetadata.worktree   = worktree;
 }
+
 
 /*
 LoadRepository loads the repo if `.git` dir
 if found in the `repoPath`
 */
-func LoadRepository (repoUrl string) *RepoMetadata {
-    repoPath := PathFromRepoURL(repoUrl);
+func (repoMetadata *RepoMetadata) LoadRepository () {
+    repoPath := PathFromRepoURL(repoMetadata.URL);
     repo, err := git.PlainOpen(repoPath);
+    if err == git.ErrRepositoryNotExists {
+        repoMetadata.CloneRepository();
+        return;
+    }
     logs.Error(err);
 
     worktree, err := repo.Worktree();
     logs.Error(err);
 
-    return &RepoMetadata{repo, worktree};
+    repoMetadata.repository = repo;
+    repoMetadata.worktree   = worktree;
 }
+
 
 /* 
 PullRepository pulls the repository represented by RepoMetadata
@@ -62,11 +74,12 @@ func (repoMetadata *RepoMetadata) PullRepository () {
     }
 }
 
+
 /*
 CheckoutBranch checks out the branch for the repo
 */
-func (repoMetadata *RepoMetadata) CheckoutBranch (branchName string) {
-    branch, err := repoMetadata.repository.Branch(branchName);
+func (repoMetadata *RepoMetadata) CheckoutBranch () {
+    branch, err := repoMetadata.repository.Branch(repoMetadata.BranchName);
     logs.Error(err);
 
     err = repoMetadata.worktree.Checkout(&git.CheckoutOptions{

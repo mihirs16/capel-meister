@@ -5,6 +5,7 @@ import (
 	"os/exec"
 );
 
+
 /*
 Build builds all the services' images in docker-compose.yml
 */
@@ -14,6 +15,7 @@ func Build () {
     logs.Info(string(stdOut));
     logs.Error(err);
 }
+
 
 /*
 Up updates and runs the built images of services in the docker-compose.yml
