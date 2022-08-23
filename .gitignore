@@ -1,6 +1,9 @@
 # go
 build/*
 
+# build
+deployments.json
+
 # misc
 *.DS_Store
 *.env

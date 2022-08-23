@@ -3,6 +3,7 @@ package repository
 import (
 	"capel-meister/pkg/logs"
 	"github.com/go-git/go-git/v5"
+    "capel-meister/pkg/utils"
 )
 
 
@@ -24,7 +25,7 @@ from the `repoUrl` specified
 to the repoPath specified
 */
 func (repoMetadata *RepoMetadata) CloneRepository () {
-    repoPath := PathFromRepoURL(repoMetadata.URL);
+    repoPath := utils.PathFromRepoURL(repoMetadata.URL);
     repo, err := git.PlainClone(repoPath, false, &git.CloneOptions{ 
         URL: repoMetadata.URL,
         RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
@@ -44,7 +45,7 @@ LoadRepository loads the repo if `.git` dir
 if found in the `repoPath`
 */
 func (repoMetadata *RepoMetadata) LoadRepository () {
-    repoPath := PathFromRepoURL(repoMetadata.URL);
+    repoPath := utils.PathFromRepoURL(repoMetadata.URL);
     repo, err := git.PlainOpen(repoPath);
     if err == git.ErrRepositoryNotExists {
         repoMetadata.CloneRepository();

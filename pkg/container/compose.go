@@ -7,13 +7,23 @@ import (
 
 
 /*
+ComposeMetadata has metadata for the 
+docker compose YAML file
+*/
+type ComposeMetadata struct {
+    Version     string      `json:"version"`
+    Services    map[string]struct {
+        Build   string      `json:"build"`
+        Ports   []string    `json:"ports"`
+    }                       `json:"services"` 
+};
+
+
+/*
 Build builds all the services' images in docker-compose.yml
 */
 func Build () {
-    buildCmd := exec.Command("docker", "compose", "build");
-    stdOut, err := buildCmd.CombinedOutput();
-    logs.Info(string(stdOut));
-    logs.Error(err);
+    executeCommand("docker", "compose", "build");
 }
 
 
@@ -21,8 +31,25 @@ func Build () {
 Up updates and runs the built images of services in the docker-compose.yml
 */
 func Up () {
-    upCmd := exec.Command("docker", "compose", "up", "--detach"); 
-    stdOut, err := upCmd.CombinedOutput();
+    executeCommand("docker", "compose", "up", "--detach"); 
+}
+
+
+/*
+Down stops all running services in docker-compose.yml
+*/
+func Down (service string) {
+    executeCommand("docker", "compose", "down");
+}
+
+
+/*
+executeCommand is a helper function for executing commands passed as arguments.
+*/
+func executeCommand (cmd string, args ...string) {
+    toExecCmd := exec.Command(cmd, args...);
+    stdOut, err := toExecCmd.CombinedOutput();
     logs.Info(string(stdOut));
     logs.Error(err);
 }
+

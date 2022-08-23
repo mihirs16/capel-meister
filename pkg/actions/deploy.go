@@ -2,20 +2,20 @@ package actions
 
 import (
 	"capel-meister/pkg/container"
-	"capel-meister/pkg/logs"
 	"capel-meister/pkg/repository"
 )
 
+
 /*
-Deploy deploys all the repositories specified to the server
+DeployAll deploys all the repositories specified to the server.
 */
-func Deploy (file string) {
-    deployMetadata := repository.LoadMetadata(file);
+func Deploy (deployMetadata []repository.RepoMetadata) {
     
     // clone repositories and checkout branches
     for _, repoMetadata := range deployMetadata {
         repoMetadata.LoadRepository();
         repoMetadata.CheckoutBranch();
+        repoMetadata.PullRepository();
     };
 
     // pull capel-meister

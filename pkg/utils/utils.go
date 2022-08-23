@@ -1,15 +1,13 @@
-package repository
+package utils
 
 import (
-    "os"
-    "errors"
-    "strings"
-    "net/url"
-    "path/filepath"
+	"capel-meister/pkg/logs"
 	"encoding/json"
-    "capel-meister/pkg/logs"
-);
-
+	"net/url"
+	"os"
+	"path/filepath"
+	"strings"
+)
 
 /*
 PathFromRepoURL returns the absolute filepath
@@ -39,7 +37,7 @@ func LoadJSONFromFile (file string, data interface{}) {
 
 
 /*
-WriteJSONToFile writes the contents to a JSON file
+WriteJSONToFile writes the contents of data to a JSON file.
 */
 func WriteJSONToFile (file string, data interface{}) {
     encodedData, err := json.MarshalIndent(data, "", "\t");
