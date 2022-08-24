@@ -7,8 +7,7 @@ import (
 
 
 /*
-ComposeMetadata has metadata for the 
-docker compose YAML file
+ComposeMetadata has metadata for the docker compose YAML file
 */
 type ComposeMetadata struct {
     Version     string      `json:"version"`
@@ -22,23 +21,26 @@ type ComposeMetadata struct {
 /*
 Build builds all the services' images in docker-compose.yml
 */
-func Build () {
-    executeCommand("docker", "compose", "build");
+func Build (service ...string) {
+    command := append([]string{"compose", "build"}, service...);
+    executeCommand("docker", command...);
 }
 
 
 /*
 Up updates and runs the built images of services in the docker-compose.yml
 */
-func Up () {
-    executeCommand("docker", "compose", "up", "--detach"); 
+func Up (service ...string) {
+    command := append([]string{"compose", "up"}, service...);
+    command = append(command, []string{"--detach"}...);
+    executeCommand("docker", command...); 
 }
 
 
 /*
 Down stops all running services in docker-compose.yml
 */
-func Down (service string) {
+func Down () {
     executeCommand("docker", "compose", "down");
 }
 

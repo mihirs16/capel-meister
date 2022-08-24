@@ -16,7 +16,7 @@ func BuildRouter (mode string) {
   
     deployRouter := router.Group("/deploy") 
     {
-        deployRouter.POST("/new", NewDeployment); 
+        deployRouter.POST("/new", NewDeployment);
     };
 
     router.Run(":8080");

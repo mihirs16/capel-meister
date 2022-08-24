@@ -16,6 +16,10 @@ type RepoMetadata struct {
     worktree    *git.Worktree
     URL         string          `json:"url"`
     BranchName  string          `json:"branch"`
+    Services    map[string]struct {
+        Build   string      `json:"build"`
+        Ports   []string    `json:"ports"`
+    }                       `json:"services"` 
 };
 
 

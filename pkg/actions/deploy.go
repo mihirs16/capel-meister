@@ -30,3 +30,4 @@ func Deploy (deployMetadata []repository.RepoMetadata) {
     container.Build();
     container.Up();
 }
+
