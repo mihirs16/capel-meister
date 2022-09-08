@@ -17,5 +17,6 @@ func main () {
 
     // server
     // server.BuildRouter(os.Getenv("GIN_MODE"));
+    // InitRepo test
     repository.InitRepository("capel-meister");
 }
