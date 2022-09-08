@@ -6,6 +6,6 @@ apk add certbot
 pip install certbot-nginx
 
 # generate ssl certificate
-certbot --non-interactive --nginx -d monteapi.mihirsingh.dev -m mihirs16@gmail.com --agree-tos
+certbot --non-interactive --nginx -d projects.mihirsingh.dev -m mihirs16@gmail.com --agree-tos
 certbot renew --dry-run
 
