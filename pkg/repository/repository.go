@@ -13,7 +13,7 @@ for the repository, worktree and submodules
 */
 type RepoMetadata struct {
     repository  *git.Repository
-    worktree    *git.Worktree
+    // worktree    *git.Worktree
     URL         string          `json:"url"`
     BranchName  string          `json:"branch"`
     Services    map[string]struct {
@@ -23,31 +23,39 @@ type RepoMetadata struct {
 };
 
 
+/*
+InitRepository initializes an empty repo
+*/
+func InitRepository (name string) *RepoMetadata {
+    repoPath := utils.PathFromRepoName(name)
+    repo, err := git.PlainInit(repoPath, true);
+    logs.Error(err);
+
+    return &RepoMetadata{ repository: repo };
+}
+
+
 /* 
 CloneRepository clones the repo 
 from the `repoUrl` specified 
 to the repoPath specified
-*/
 func (repoMetadata *RepoMetadata) CloneRepository () {
     repoPath := utils.PathFromRepoURL(repoMetadata.URL);
-    repo, err := git.PlainClone(repoPath, false, &git.CloneOptions{ 
+    repo, err := git.PlainClone(repoPath, true, &git.CloneOptions{ 
         URL: repoMetadata.URL,
         RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
     });
     logs.Error(err);
 
-    worktree, err := repo.Worktree();
-    logs.Error(err);
-
     repoMetadata.repository = repo;
-    repoMetadata.worktree   = worktree;
 }
+*/
 
 
 /*
 LoadRepository loads the repo if `.git` dir
 if found in the `repoPath`
-*/
+
 func (repoMetadata *RepoMetadata) LoadRepository () {
     repoPath := utils.PathFromRepoURL(repoMetadata.URL);
     repo, err := git.PlainOpen(repoPath);
@@ -63,11 +71,10 @@ func (repoMetadata *RepoMetadata) LoadRepository () {
     repoMetadata.repository = repo;
     repoMetadata.worktree   = worktree;
 }
-
+*/
 
 /* 
 PullRepository pulls the repository represented by RepoMetadata
-*/
 func (repoMetadata *RepoMetadata) PullRepository () {
     err := repoMetadata.worktree.Pull(&git.PullOptions{
         RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
@@ -78,11 +85,10 @@ func (repoMetadata *RepoMetadata) PullRepository () {
         logs.Error(err);
     }
 }
-
+*/
 
 /*
 CheckoutBranch checks out the branch for the repo
-*/
 func (repoMetadata *RepoMetadata) CheckoutBranch () {
     branch, err := repoMetadata.repository.Branch(repoMetadata.BranchName);
     logs.Error(err);
@@ -92,4 +98,5 @@ func (repoMetadata *RepoMetadata) CheckoutBranch () {
     });
     logs.Error(err);
 }
+*/
 

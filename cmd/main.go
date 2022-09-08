@@ -1,9 +1,11 @@
 package main
 
 import (
-	"os"
-	"capel-meister/internal/server"
+	// "os"
+	// "capel-meister/internal/server"
 	"capel-meister/pkg/logs"
+	"capel-meister/pkg/repository"
+
 	"github.com/joho/godotenv"
 );
 
@@ -14,5 +16,6 @@ func main () {
     logs.Error(err);
 
     // server
-    server.BuildRouter(os.Getenv("GIN_MODE"));
+    // server.BuildRouter(os.Getenv("GIN_MODE"));
+    repository.InitRepository("capel-meister");
 }

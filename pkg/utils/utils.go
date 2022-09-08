@@ -25,6 +25,18 @@ func PathFromRepoURL (repoUrl string) string {
 
 
 /*
+PathFromRepoName returns the absolute filepath
+built from repository's name and GITHUB_PATH.
+*/
+func PathFromRepoName (name string) string {
+    return filepath.Join(
+        os.Getenv("GITHUB_PATH"), 
+        name,
+    );
+}
+
+
+/*
 LoadJSONFromFile loads the contents of a JSON file into data.
 */
 func LoadJSONFromFile (file string, data interface{}) {
