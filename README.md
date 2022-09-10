@@ -14,6 +14,7 @@ The conductor and manager of projects (containers) deployed to a server, with CI
 - To run the project containers manually.
 
 ```bash
-docker compose --file choir.yml up --build
+chmod +x ./.ci-cd/post-receive.sh
+./.ci-cd/post-receive.sh
 ```
 
