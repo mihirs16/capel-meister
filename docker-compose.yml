@@ -5,5 +5,11 @@
             "build": ".", 
             "ports": ["80:80", "443:443"]
         }
+    },
+    "networks": {
+        "default": {
+            "name": "heheboi-docker-network",
+            "driver": "bridge"
+        }
     }
 }
